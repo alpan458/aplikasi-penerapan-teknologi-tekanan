@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Teknologi Penerapan Tekanan | MTsN 1 Kota Malang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        primary: '#0d9488',   // Teal 600
+                        secondary: '#14b8a6', // Teal 500
+                        dark: '#0f766e',      // Teal 700
+                        deep: '#134e4a',      // Teal 900
+                        light: '#f0fdf4',     // Mint 50
+                        accent: '#f59e0b',    // Amber 500
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .page-content { display: none; }
+        .page-content.active { display: block; animation: fadeIn 0.5s; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0f766e; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom Equations */
+        .fraction { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; }
+        .numerator { border-bottom: 2px solid currentColor; padding: 0 2px; }
+        .denominator { padding: 0 2px; }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(20, 184, 166, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(20, 184, 166, 0.8); }
+        }
+        .glow-effect { animation: pulseGlow 3s infinite; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="bg-gradient-to-r from-deep via-dark to-primary text-white shadow-xl z-20 sticky top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/10 p-2.5 rounded-xl backdrop-blur-md border border-white/20 shadow-inner">
+                        <i class="fas fa-microchip text-3xl text-teal-200"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-black tracking-tight">Aplikasi Teknologi Penerapan Tekanan</h1>
+                        <p class="text-xs md:text-sm text-teal-100 font-medium">Disusun oleh: Alpan Ibrahim S.Si. | MTsN 1 Kota Malang</p>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-white hover:text-teal-200 focus:outline-none p-2">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:block bg-deep/95 backdrop-blur-md border-t border-teal-800/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-2">
+                    <button onclick="navigate('home')" class="nav-btn bg-teal-700/80 px-4 py-3 text-sm font-semibold hover:bg-teal-600 transition flex items-center rounded-t-lg" data-target="home"><i class="fas fa-home mr-2"></i> Beranda</button>
+                    <button onclick="navigate('materi')" class="nav-btn px-4 py-3 text-sm font-semibold hover:bg-teal-600 transition flex items-center rounded-t-lg" data-target="materi"><i class="fas fa-book-open mr-2"></i> Materi Lengkap</button>
+                    <button onclick="navigate('lab')" class="nav-btn px-4 py-3 text-sm font-semibold hover:bg-teal-600 transition flex items-center rounded-t-lg" data-target="lab"><i class="fas fa-flask mr-2"></i> Virtual Lab Teknologi</button>
+                    <button onclick="navigate('game')" class="nav-btn px-4 py-3 text-sm font-semibold hover:bg-teal-600 transition flex items-center rounded-t-lg" data-target="game"><i class="fas fa-gamepad mr-2"></i> Game Misi Teknisi</button>
+                    <button onclick="navigate('quiz')" class="nav-btn px-4 py-3 text-sm font-semibold hover:bg-teal-600 transition flex items-center rounded-t-lg" data-target="quiz"><i class="fas fa-tasks mr-2"></i> Kuis (20 Soal)</button>
+                </div>
+            </div>
+        </nav>
+        <!-- Mobile Navigation Menu -->
+        <nav id="mobile-nav" class="hidden md:hidden bg-deep border-t border-teal-800">
+            <div class="flex flex-col px-4 pt-2 pb-3 space-y-1">
+                <button onclick="navigate('home'); toggleMobileMenu()" class="nav-btn text-left px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700 transition"><i class="fas fa-home mr-2"></i> Beranda</button>
+                <button onclick="navigate('materi'); toggleMobileMenu()" class="nav-btn text-left px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700 transition"><i class="fas fa-book-open mr-2"></i> Materi Lengkap</button>
+                <button onclick="navigate('lab'); toggleMobileMenu()" class="nav-btn text-left px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700 transition"><i class="fas fa-flask mr-2"></i> Virtual Lab Teknologi</button>
+                <button onclick="navigate('game'); toggleMobileMenu()" class="nav-btn text-left px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700 transition"><i class="fas fa-gamepad mr-2"></i> Game Misi Teknisi</button>
+                <button onclick="navigate('quiz'); toggleMobileMenu()" class="nav-btn text-left px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700 transition"><i class="fas fa-tasks mr-2"></i> Kuis (20 Soal)</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow overflow-y-auto pb-12">
+        
+        <!-- HOME PAGE -->
+        <section id="home" class="page-content active max-w-6xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row">
+                <div class="p-8 md:p-12 md:w-3/5 flex flex-col justify-center">
+                    <span class="inline-block px-3 py-1 bg-teal-100 text-teal-800 font-bold rounded-full text-xs uppercase tracking-wider mb-3 w-max">
+                        <i class="fas fa-cogs mr-1"></i> IPA Kelas 8 MTs / SMP
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
+                        Keajaiban Teknologi <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600">Penerapan Tekanan</span>
+                    </h2>
+                    <p class="text-slate-600 text-base md:text-lg mb-8 leading-relaxed">
+                        Bagaimana sebuah pijakan kaki ringan pada pedal rem dapat menghentikan laju mobil bermassa ratusan ton? Mengapa jarum suntik dibuat sangat runcing? Dan bagaimana tensimeter mengukur detak kehidupan manusia melalui tekanan darah? Mari kita bedah teknologi hebat berbasis sains tekanan beserta isyarat hikmah Ilahi di dalamnya!
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="navigate('materi')" class="bg-primary hover:bg-dark text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-teal-500/30 transition transform hover:-translate-y-0.5 flex items-center text-lg">
+                            Mulai Jelajah Teknologi <i class="fas fa-arrow-right ml-3"></i>
+                        </button>
+                        <button onclick="navigate('lab')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-6 rounded-xl transition flex items-center">
+                            <i class="fas fa-flask text-teal-600 mr-2"></i> Uji Coba Virtual Lab
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-2/5 bg-gradient-to-br from-teal-500 via-emerald-700 to-deep p-8 flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/10 backdrop-blur-3xl"></div>
+                    <!-- Custom Interactive SVG Illustration for Hydraulic Lift & Tech Pressure -->
+                    <div class="relative z-10 text-center text-white">
+                        <div class="relative inline-block my-4">
+                            <svg viewBox="0 0 220 220" class="w-64 h-64 drop-shadow-2xl mx-auto">
+                                <!-- Hydraulic Cylinder Outline -->
+                                <rect x="20" y="100" width="40" height="90" fill="#334155" rx="4"/>
+                                <rect x="120" y="60" width="80" height="130" fill="#334155" rx="4"/>
+                                <rect x="60" y="150" width="60" height="40" fill="#1e293b"/>
+                                <!-- Fluid Inside -->
+                                <path d="M 22 130 L 58 130 L 58 188 L 198 188 L 198 110 L 122 110 L 122 152 L 22 152 Z" fill="#0ea5e9"/>
+                                <!-- Piston 1 (Small) -->
+                                <rect x="22" y="110" width="36" height="20" fill="#f59e0b" rx="2"/>
+                                <line x1="40" y1="60" x2="40" y2="110" stroke="#f1f5f9" stroke-width="6"/>
+                                <circle cx="40" cy="55" r="8" fill="#e2e8f0"/>
+                                <!-- Piston 2 (Large) -->
+                                <rect x="122" y="90" width="76" height="20" fill="#f59e0b" rx="2"/>
+                                <line x1="160" y1="40" x2="160" y2="90" stroke="#f1f5f9" stroke-width="8"/>
+                                <!-- Vehicle / Heavy Load -->
+                                <rect x="120" y="25" width="80" height="20" fill="#ef4444" rx="4"/>
+                                <circle cx="135" cy="45" r="7" fill="#1e293b"/>
+                                <circle cx="185" cy="45" r="7" fill="#1e293b"/>
+                                <!-- Arrows -->
+                                <path d="M 40 25 L 40 45 M 35 40 L 40 45 L 45 40" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M 160 20 L 160 5 M 155 10 L 160 5 L 165 10" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <p class="font-bold text-teal-100 text-lg">F₂ = F₁ × (A₂ / A₁)</p>
+                        <p class="text-xs text-teal-200">Prinsip Pascal & Pengandaan Gaya Hidrolik</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Cards Grid -->
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 hover:shadow-lg transition flex items-start space-x-4">
+                    <div class="bg-teal-100 p-3.5 rounded-xl text-teal-600 text-2xl"><i class="fas fa-truck-monster"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Teknologi Padat & Cair</h3>
+                        <p class="text-sm text-slate-500 mt-1">Pelajari mekanisme dongkrak hidrolik, rem piringan, tensimeter, alat suntik, hingga pisau & paku.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 hover:shadow-lg transition flex items-start space-x-4">
+                    <div class="bg-emerald-100 p-3.5 rounded-xl text-emerald-600 text-2xl"><i class="fas fa-mosque"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Integrasi Nilai Islam</h3>
+                        <p class="text-sm text-slate-500 mt-1">Tafsir ilmiah pelayaran kapal (QS. An-Nahl: 14), angin pembawa tekanan (QS. Ar-Rum: 46), & kesempurnaan darah.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 hover:shadow-lg transition flex items-start space-x-4">
+                    <div class="bg-indigo-100 p-3.5 rounded-xl text-indigo-600 text-2xl"><i class="fas fa-brain"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Analisis Tingkat Lanjut</h3>
+                        <p class="text-sm text-slate-500 mt-1">Analisis Efek Bernoulli pada Venturimeter, Sistem Hidrolik Industri Multi-Piston, & Sensor Piezoelektrik.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MATERI PAGE -->
+        <section id="materi" class="page-content max-w-5xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden p-6 md:p-10 relative">
+                
+                <!-- Materi Pagination Tabs -->
+                <div class="flex border-b border-slate-200 mb-8 overflow-x-auto no-scrollbar">
+                    <button onclick="showMateriPage(1)" id="tab-mat-1" class="mat-tab py-3 px-5 text-primary border-b-2 border-primary font-bold whitespace-nowrap text-sm md:text-base">
+                        1. Teknologi Tekanan Padat & Cair
+                    </button>
+                    <button onclick="showMateriPage(2)" id="tab-mat-2" class="mat-tab py-3 px-5 text-slate-500 hover:text-primary transition whitespace-nowrap text-sm md:text-base">
+                        2. Teknologi Tekanan Gas & Medis
+                    </button>
+                    <button onclick="showMateriPage(3)" id="tab-mat-3" class="mat-tab py-3 px-5 text-slate-500 hover:text-primary transition whitespace-nowrap text-sm md:text-base">
+                        3. Analisis Rekayasa Tingkat Lanjut
+                    </button>
+                    <button onclick="showMateriPage(4)" id="tab-mat-4" class="mat-tab py-3 px-5 text-slate-500 hover:text-primary transition whitespace-nowrap text-sm md:text-base flex items-center">
+                        <i class="fas fa-star text-amber-400 mr-2"></i> Integrasi Sains & Islam
+                    </button>
+                </div>
+
+                <!-- Page 1: Teknologi Tekanan Padat & Cair -->
+                <div id="mat-page-1" class="mat-content fade-in">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="bg-teal-100 text-teal-800 text-xs font-extrabold px-3 py-1 rounded-full">KATEGORI FLUIDA & PADAT</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Teknologi Penerapan Tekanan Zat Padat & Cair</h2>
+                    </div>
+
+                    <p class="text-slate-700 leading-relaxed mb-6">
+                        Penerapan prinsip tekanan ($P = \frac{F}{A}$) dan Hukum Pascal ($P_1 = P_2$) melahirkan berbagai inovasi teknologi yang memudahkan kehidupan manusia sehari-hari!
+                    </p>
+
+                    <!-- Tech Grid 1 -->
+                    <div class="space-y-6 mb-8">
+                        <!-- Dongkrak Hidrolik -->
+                        <div class="bg-gradient-to-r from-teal-50 to-emerald-50 border-l-4 border-teal-500 p-5 rounded-r-2xl shadow-sm">
+                            <h3 class="font-bold text-teal-900 text-xl mb-2 flex items-center">
+                                <i class="fas fa-car-side mr-3 text-teal-600"></i>1. Dongkrak & Mesin Pengangkat Mobil Hidrolik
+                            </h3>
+                            <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                                Dongkrak hidrolik memanfaatkan **Hukum Pascal**: <em>"Tekanan yang diberikan pada zat cair dalam ruang tertutup diteruskan ke segala arah dengan sama besar."</em>
+                            </p>
+                            <div class="bg-white p-4 rounded-xl border border-teal-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                                <div class="font-mono text-center md:text-left text-teal-900 font-bold text-lg">
+                                    <span class="fraction"><span class="numerator">F₁</span><span class="denominator">A₁</span></span> = <span class="fraction"><span class="numerator">F₂</span><span class="denominator">A₂</span></span> &nbsp;&implies;&nbsp; F₂ = F₁ × <span class="fraction"><span class="numerator">A₂</span><span class="denominator">A₁</span></span>
+                                </div>
+                                <p class="text-xs text-slate-600 max-w-sm">
+                                    Dengan membuat luas penampang piston besar ($A_2$) jauh lebih besar dari piston kecil ($A_1$), gaya tekan kecil ($F_1$) dari tangan kita mampu menghasilkan gaya angkat raksasa ($F_2$) untuk mengangkat mobil!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Rem Hidrolik Mobil / Motor -->
+                        <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                            <h3 class="font-bold text-slate-800 text-lg mb-2 flex items-center text-teal-700">
+                                <i class="fas fa-compact-disc mr-2"></i>2. Rem Piringan Hidrolik (Hydraulic Brake)
+                            </h3>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Ketika pengemudi menekan pedal rem, piston kecil menekan minyak rem (menciptakan tekanan). Tekanan minyak rem ini diteruskan secara merata melalui pipa fluida menuju piston besar di klem rem, lalu menjepit piringan cakram roda dengan sangat kuat hingga kendaraan berhenti seketika.
+                            </p>
+                        </div>
+
+                        <!-- Sepatu Salju, Jarum Suntik & Pisau -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                                <h4 class="font-bold text-slate-800 text-base mb-1 flex items-center"><i class="fas fa-shoe-prints text-amber-500 mr-2"></i>Sepatu Salju & Ban Alat Berat</h4>
+                                <p class="text-xs text-slate-600">
+                                    Dengan memperbesar luas alas permukaan ($A$), tekanan ($P = F/A$) ke tanah menjadi sangat kecil. Akibatnya, orang yang memakai sepatu salju atau traktor berbanting lebar tidak akan tenggelam dalam lumpur/salju.
+                                </p>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                                <h4 class="font-bold text-slate-800 text-base mb-1 flex items-center"><i class="fas fa-syringe text-teal-600 mr-2"></i>Jarum Suntik & Pisau Tajam</h4>
+                                <p class="text-xs text-slate-600">
+                                    Sebaliknya, memperkecil luas permukaan ujung jarum/ujung pisau membuat tekanan yang dihasilkan menjadi melimpah tinggi walau hanya diberi dorongan/gaya dorong kecil.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2: Teknologi Tekanan Gas & Medis -->
+                <div id="mat-page-2" class="mat-content fade-in hidden">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="bg-sky-100 text-sky-800 text-xs font-extrabold px-3 py-1 rounded-full">TEKNOLOGI MEDIS & ATMOSFER</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Teknologi Tekanan Gas, Kapal, & Alat Medis</h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Tensimeter / Sphygmomanometer -->
+                        <div class="bg-white border border-sky-200 rounded-2xl p-6 shadow-sm">
+                            <h3 class="text-xl font-bold text-sky-900 mb-2 flex items-center">
+                                <i class="fas fa-heartbeat text-rose-500 mr-3"></i>1. Tensimeter (Sphygmomanometer)
+                            </h3>
+                            <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                                Alat pengukur tekanan darah bekerja berdasarkan **Hukum Pascal dalam Pembuluh Darah**. Udara dipompa ke dalam manset lengan hingga menyumbat sementara aliran arteri brakialis. Saat udara dikeluarkan perlahan:
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-rose-50 p-4 rounded-xl border border-rose-200">
+                                    <span class="font-bold text-rose-800 text-sm block mb-1">Tekanan Sistolik (Atas):</span>
+                                    <p class="text-xs text-slate-600">Tekanan saat jantung berkontraksi memompa darah keluar menuju pembuluh darah arteri (Normal: $\approx 120 \text{ mmHg}$).</p>
+                                </div>
+                                <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
+                                    <span class="font-bold text-sky-800 text-sm block mb-1">Tekanan Diastolik (Bawah):</span>
+                                    <p class="text-xs text-slate-600">Tekanan saat jantung berelaksasi menerima kembali darah kembali dari pembuluh vena (Normal: $\approx 80 \text{ mmHg}$).</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Galangan Kapal & Kapal Selam -->
+                        <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md">
+                            <h3 class="text-xl font-bold text-teal-400 mb-3 flex items-center">
+                                <i class="fas fa-ship mr-3"></i>2. Galangan Kapal & Kapal Selam (Mekanisme Tangki Pemberat)
+                            </h3>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Kapal laut dan kapal selam memanfaatkan **Hukum Archimedes** ($F_a = \rho \cdot g \cdot V_{tercelup}$). Kapal selam memiliki **Tangki Ballast (Pemberat)**:
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                                    <span class="font-bold text-amber-400 block mb-1">Tenggelam:</span>
+                                    Katup katup air dibuka, tangki diisi air penuh $\implies W_{kapal} > F_a$.
+                                </div>
+                                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                                    <span class="font-bold text-teal-300 block mb-1">Melayang:</span>
+                                    Jumlah air disesuaikan agar berat kapal sama persis dengan gaya apung $\implies W_{kapal} = F_a$.
+                                </div>
+                                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                                    <span class="font-bold text-sky-300 block mb-1">Terapung:</span>
+                                    Udara bertekanan tinggi ditiupkan untuk mengeluarkan air dari tangki $\implies W_{kapal} < F_a$.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Water Pump & Suction Cup -->
+                        <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl">
+                            <h3 class="font-bold text-emerald-900 text-lg mb-2 flex items-center">
+                                <i class="fas fa-faucet mr-2"></i>3. Pompa Air Listrik & Penyedot Karet (Suction Cup)
+                            </h3>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                Penyedot karet menempel kuat pada kaca keramik karena udara di dalam penyedot dikeluarkan. Tekanan udara luar yang tinggi ($1 \text{ atm}$) menekan karet dari luar dengan sangat kuat sehingga sukar dilepas!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 3: Analisis Tingkat Lanjut -->
+                <div id="mat-page-3" class="mat-content fade-in hidden">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full">ANALISIS REKAYASA DEWASA</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Analisis Tingkat Lanjut: Dinamika Fluida & Sensor</h2>
+                    </div>
+
+                    <p class="text-slate-700 leading-relaxed mb-6">
+                        Mari kita selami analisis fisika teknis yang melandasi rekayasa mesin modern bernilai tinggi!
+                    </p>
+
+                    <div class="space-y-6">
+                        <!-- Aerodinamika & Venturimeter (Bernoulli) -->
+                        <div class="bg-indigo-50 border-l-4 border-indigo-600 p-5 rounded-r-2xl">
+                            <h3 class="font-bold text-indigo-900 text-lg mb-2">1. Prinsip Bernoulli & Injektor Venturimeter</h3>
+                            <p class="text-sm text-slate-700 leading-relaxed mb-3">
+                                Hukum Bernoulli menyatakan bahwa pada fluida bergerak, **makin cepat kelajuan fluida ($v$), makin kecil tekanan ($P$) yang dihasilkannya**:
+                            </p>
+                            <div class="my-2 font-mono font-bold text-indigo-950 text-base bg-white px-5 py-3 rounded-xl border border-indigo-200">
+                                P₁ + ½ ρ v₁² + ρ g h₁ = P₂ + ½ ρ v₂² + ρ g h₂
+                            </div>
+                            <p class="text-xs text-slate-600 mt-2">
+                                **Aplikasi Industri:** Karburator mesin, penyemprot parfum/pestisida, dan Karburator Pesawat Terbang memanfaatkan aliran udara cepat di leher sempit (Venturi) untuk menghasilkan area bertekanan rendah yang menghisap cairan bahan bakar secara otomatis!
+                            </p>
+                        </div>
+
+                        <!-- System Multi-Piston Industri -->
+                        <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+                            <h3 class="font-bold text-slate-800 text-lg mb-2">2. Keuntungan Mekanis Multi-Piston Terhubung</h3>
+                            <p class="text-sm text-slate-700 leading-relaxed mb-3">
+                                Pada pabrik industri berat, sistem hidrolik dikombinasikan dengan beberapa pipa bercabang (multi-actuator). Keuntungan Mekanis Total ($KM$) dirumuskan sebagai perbandingan rasio diameter ($D$):
+                            </p>
+                            <div class="font-mono text-center font-bold text-teal-800 bg-white p-3 rounded-lg border border-slate-200">
+                                KM = <span class="fraction"><span class="numerator">F₂</span><span class="denominator">F₁</span></span> = <span class="fraction"><span class="numerator">A₂</span><span class="denominator">A₁</span></span> = (<span class="fraction"><span class="numerator">D₂</span><span class="denominator">D₁</span></span>)²
+                            </div>
+                        </div>
+
+                        <!-- Piezoelectric Pressure Sensors -->
+                        <div class="bg-teal-50 border-l-4 border-teal-600 p-5 rounded-r-2xl">
+                            <h3 class="font-bold text-teal-900 text-lg mb-2">3. Sensor Tekanan Piezoelektrik Nanoteknologi</h3>
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                Peralatan modern seperti smart-watch pengukur detak jantung menggunakan kristal piezoelektrik. Ketika pembuluh darah berdenyut memberi tekanan mekanis mikro pada kristal, struktur molekul piezoelektrik terdeformasi dan membangkitkan tegangan listrik ($\Delta V$) yang kemudian dibaca oleh prosesor digital.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 4: Integrasi Islam -->
+                <div id="mat-page-4" class="mat-content fade-in hidden">
+                    <div class="text-center mb-8">
+                        <span class="text-emerald-600 text-3xl"><i class="fas fa-star-and-crescent"></i></span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mt-2">Harmoni Teknologi, Sains Tekanan & Al-Qur'an</h2>
+                        <p class="text-slate-600 text-sm mt-1">Menggali Isyarat Ayat-Ayat Kauniyah tentang Kemudahan Pelayaran & Keseimbangan Hidup</p>
+                    </div>
+
+                    <!-- Qur'an Ayat 1: An-Nahl 14 -->
+                    <div class="bg-gradient-to-br from-emerald-900 to-teal-950 text-white p-6 md:p-8 rounded-3xl shadow-xl mb-8 relative overflow-hidden">
+                        <i class="fas fa-ship absolute -right-10 -bottom-10 text-emerald-800/20 text-9xl"></i>
+                        <div class="relative z-10">
+                            <span class="bg-emerald-500/30 text-emerald-200 text-xs font-bold px-3 py-1 rounded-full border border-emerald-400/30">QS. AN-NAHL: 14</span>
+                            <h3 class="text-xl font-bold text-emerald-300 mt-2 mb-4">Eksplorasi Laut & Tekanan Gaya Apung Kapal</h3>
+                            
+                            <p class="text-right font-arabic text-2xl md:text-3xl leading-loose mb-4 text-emerald-100">
+                                وَهُوَ الَّذِي سَخَّرَ الْبَحْرَ لِتَأْكُلُوا مِنْهُ لَحْمًا طَرِيًّا وَتَسْتَخْرِجُوا مِنْهُ حِلْيَةً تَلْبَسُونَهَا وَتَرَى الْفُلْكَ مَوَاخِرَ فِيهِ وَلِتَبْتَغُوا مِن فَضْلِهِ وَلَعَلَّكُمْ تَشْكُرُونَ
+                            </p>
+                            
+                            <p class="text-sm text-emerald-100 italic mb-4 leading-relaxed">
+                                "Dan Dialah Allah yang menundukkan lautan (untukmu), agar kamu dapat memakan daripadanya daging yang segar (ikan), dan kamu mengeluarkan dari lautan itu perhiasan yang kamu pakai; dan kamu melihat kapal-kapal berlayar membelah lautan..."
+                            </p>
+                            
+                            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl text-xs text-emerald-100 leading-relaxed border border-white/10">
+                                <strong>Hikmah Tadabbur Sains:</strong> Allah menundukkan hukum-hukum fisika fluida, kerapatan massa, dan tekanan gaya apung Archimedes sehingga bahan logam berat dapat dirancang manusia menjadi kapal-kapal raksasa (<em>mowakhira</em>) pembawa rezeki manusia.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Qur'an Ayat 2: Ar-Rum 46 -->
+                    <div class="bg-white border border-emerald-200 p-6 rounded-2xl mb-6 shadow-sm">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">QS. AR-RUM: 46</span>
+                        <h3 class="font-bold text-slate-800 text-lg mt-2 mb-2">Perbedaan Tekanan Udara Menggerakkan Angin & Kapal Layar</h3>
+                        <p class="text-right font-arabic text-2xl leading-loose text-slate-800 mb-2">
+                            وَمِنْ آيَاتِهِ أَن يُرْسِلَ الرِّيَاحَ مُبَشِّرَاتٍ وَلِيُذِيقَكُم مِّن رَّحْمَتِهِ وَلِتَجْرِيَ الْفُلْكُ بِأَمْرِهِ
+                        </p>
+                        <p class="text-sm text-slate-700 italic mb-3">
+                            "Dan di antara tanda-tanda kekuasaan-Nya adalah bahwa Dia mengirimkan angin sebagai pembawa berita gembira dan untuk merasakan kepadamu sebagian dari rahmat-Nya dan supaya kapal dapat berlayar dengan perintah-Nya..."
+                        </p>
+                        <p class="text-xs text-slate-600">
+                            <strong>Analisis Sains:</strong> Angin bertiup akibat perbedaan tekanan udara antar daerah (dari area bertekanan tinggi menuju tekanan rendah). Perbedaan tekanan inilah yang mendorong layar kapal dan menggerakkan teknologi turbin angin!
+                        </p>
+                    </div>
+
+                    <!-- Spiritual Reflection -->
+                    <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl">
+                        <h3 class="font-bold text-amber-900 text-lg mb-3 flex items-center">
+                            <i class="fas fa-heart text-rose-500 mr-2"></i> Renungan: "Hikmah Keseimbangan Tekanan Darah"
+                        </h3>
+                        <p class="text-sm text-slate-700 leading-relaxed mb-3">
+                            Jantung manusia berdetak sekitar 100.000 kali sehari, menjaga tekanan darah ideal $120/80 \text{ mmHg}$ agar oksigen menjangkau seluruh sel otak. Allah menciptakan pembuluh darah fleksibel yang secara otomatis menyesuaikan tekanan. Maka, menggunakan ilmu teknologi untuk menjaga kesehatan dan membantu sesama adalah wujud rasa syukur atas nikmat penciptaan Ilahi!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons inside Material -->
+                <div class="flex justify-between mt-10 pt-6 border-t border-slate-200">
+                    <button id="btn-prev-mat" onclick="changeMateri(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 px-5 rounded-xl hidden transition flex items-center">
+                        <i class="fas fa-chevron-left mr-2"></i> Sebelumnya
+                    </button>
+                    <button id="btn-next-mat" onclick="changeMateri(1)" class="bg-primary hover:bg-dark text-white font-bold py-2.5 px-6 rounded-xl ml-auto transition flex items-center shadow-md">
+                        Selanjutnya <i class="fas fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIRTUAL LAB PAGE -->
+        <section id="lab" class="page-content max-w-6xl mx-auto px-4 py-8">
+            <div class="text-center mb-8">
+                <span class="bg-teal-100 text-teal-800 font-extrabold text-xs px-3 py-1 rounded-full uppercase">Simulasi Interaktif</span>
+                <h2 class="text-3xl font-black text-slate-900 mt-2">Laboratorium Virtual Aplikasi Tekanan</h2>
+                <p class="text-slate-600 text-sm mt-1">Uji coba simulasi Dongkrak Hidrolik dan Tensimeter Medis secara real-time!</p>
+            </div>
+
+            <!-- Lab Switcher Tabs -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-slate-200 p-1 rounded-2xl flex space-x-1">
+                    <button id="lab-tab-1" onclick="switchLabMode('hydraulic')" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-teal-700 shadow-sm transition">
+                        <i class="fas fa-truck-pickup mr-2"></i> Dongkrak Hidrolik (Hukum Pascal)
+                    </button>
+                    <button id="lab-tab-2" onclick="switchLabMode('tensimeter')" class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:text-slate-900 transition">
+                        <i class="fas fa-heartbeat mr-2"></i> Tensimeter Medis (Tekanan Darah)
+                    </button>
+                </div>
+            </div>
+
+            <!-- SIMULATION 1: HYDRAULIC LIFT SIMULATOR -->
+            <div id="sim-hydraulic-container" class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row">
+                <!-- Controls Side -->
+                <div class="md:w-1/3 bg-slate-50 p-6 border-r border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-4 flex items-center border-b pb-2">
+                            <i class="fas fa-sliders mr-2 text-teal-600"></i> Variable Dongkrak
+                        </h3>
+
+                        <!-- Input Force (F1) -->
+                        <div class="mb-5">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold text-slate-700 uppercase">Gaya Tekan Tangan (F₁)</label>
+                                <span class="text-sm font-bold text-teal-600 font-mono"><span id="val-f1">200</span> N</span>
+                            </div>
+                            <input type="range" id="slider-f1" min="50" max="1000" step="50" value="200" oninput="updateLabHydraulic()" class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-teal-600">
+                        </div>
+
+                        <!-- Small Area (A1) -->
+                        <div class="mb-5">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold text-slate-700 uppercase">Luas Piston Kecil (A₁)</label>
+                                <span class="text-sm font-bold text-amber-600 font-mono"><span id="val-a1">5</span> cm²</span>
+                            </div>
+                            <input type="range" id="slider-a1" min="2" max="20" step="1" value="5" oninput="updateLabHydraulic()" class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                        </div>
+
+                        <!-- Large Area (A2) -->
+                        <div class="mb-5">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold text-slate-700 uppercase">Luas Piston Besar (A₂)</label>
+                                <span class="text-sm font-bold text-indigo-600 font-mono"><span id="val-a2">250</span> cm²</span>
+                            </div>
+                            <input type="range" id="slider-a2" min="50" max="500" step="10" value="250" oninput="updateLabHydraulic()" class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+                    </div>
+
+                    <!-- Output Calculations Box -->
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-2xl shadow-inner mt-4">
+                        <div class="text-xs text-teal-400 uppercase font-bold tracking-wider mb-2">Hasil Perhitungan Gaya Pascal:</div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-slate-300">Gaya Angkat Beban (F₂):</span>
+                            <span class="font-black text-amber-400 font-mono text-xl"><span id="res-f2">10,000</span> N</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-700 pt-2 mt-2">
+                            <span class="text-xs text-slate-300">Pengandaan Gaya (KM):</span>
+                            <span class="font-extrabold text-teal-300 font-mono text-sm"><span id="res-km">50</span>× Lipat</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-700 pt-2 mt-1">
+                            <span class="text-xs text-slate-300">Setara Massa Terangkat:</span>
+                            <span class="font-bold text-emerald-400 font-mono text-xs"><span id="res-mass">1,019</span> kg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Canvas Side -->
+                <div class="md:w-2/3 p-6 bg-slate-950 relative flex flex-col justify-between items-center overflow-hidden min-h-[420px]">
+                    <div class="w-full text-xs text-teal-300 font-mono flex justify-between items-center bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800">
+                        <span><i class="fas fa-microchip text-amber-400 mr-2"></i>Simulasi Visual Fluida & Piston Bergerak</span>
+                        <span id="hydraulic-status-badge" class="bg-teal-900 text-teal-200 px-2.5 py-0.5 rounded-full font-bold">Tekanan Terusfikan Merata</span>
+                    </div>
+
+                    <!-- Hydraulic Canvas Container -->
+                    <div class="relative w-full flex-grow my-4 flex items-center justify-center">
+                        <canvas id="hydraulicCanvas" width="500" height="260" class="rounded-2xl border-2 border-slate-700 bg-slate-900 shadow-2xl"></canvas>
+                    </div>
+
+                    <div class="w-full text-center text-xs text-slate-400">
+                        <i class="fas fa-info-circle text-teal-400 mr-1"></i> Gaya $F_1$ menekan minyak rem $\rightarrow$ Tekanan $P$ dikirim merata melalui pipa $\rightarrow$ $F_2$ melambung tinggi mengangkat kendaraan!
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIMULATION 2: TENSIMETER SIMULATOR -->
+            <div id="sim-tensimeter-container" class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden hidden p-6 md:p-8">
+                <h3 class="font-bold text-xl text-slate-800 mb-2 text-center">Simulasi Pengukuran Tekanan Darah (Tensimeter Digital)</h3>
+                <p class="text-center text-slate-600 text-sm mb-6">Atur tingkat aktivitas fisik pasien untuk mengamati perubahan Tekanan Sistolik & Diastolik!</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <!-- Patient State Selector -->
+                    <div class="space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 md:col-span-1">
+                        <label class="text-xs font-bold text-slate-700 uppercase block">Kondisi Aktivitas Pasien:</label>
+                        <button onclick="setTensimeterState('rest')" id="btn-state-rest" class="w-full text-left p-3 rounded-xl border font-semibold text-xs flex items-center justify-between bg-teal-50 border-teal-500 text-teal-900">
+                            <span><i class="fas fa-bed text-teal-600 mr-2"></i>Istirahat / Santai</span>
+                            <span class="font-mono text-[10px] bg-teal-200 px-2 py-0.5 rounded">120/80</span>
+                        </button>
+                        <button onclick="setTensimeterState('walk')" id="btn-state-walk" class="w-full text-left p-3 rounded-xl border font-semibold text-xs flex items-center justify-between bg-white border-slate-200 text-slate-700 hover:bg-slate-100">
+                            <span><i class="fas fa-walking text-amber-500 mr-2"></i>Jalan Santai</span>
+                            <span class="font-mono text-[10px] bg-slate-200 px-2 py-0.5 rounded">135/85</span>
+                        </button>
+                        <button onclick="setTensimeterState('run')" id="btn-state-run" class="w-full text-left p-3 rounded-xl border font-semibold text-xs flex items-center justify-between bg-white border-slate-200 text-slate-700 hover:bg-slate-100">
+                            <span><i class="fas fa-running text-rose-500 mr-2"></i>Olahraga Berat</span>
+                            <span class="font-mono text-[10px] bg-slate-200 px-2 py-0.5 rounded">160/95</span>
+                        </button>
+
+                        <div class="pt-2 border-t text-xs text-slate-500 leading-relaxed">
+                            <i class="fas fa-heartbeat text-rose-500 mr-1"></i> Pembuluh darah mengalami variasi tekanan bergantung pada volume pompa ventrikel jantung per menit.
+                        </div>
+                    </div>
+
+                    <!-- Digital Monitor Visual -->
+                    <div class="bg-slate-900 p-8 rounded-3xl text-white text-center flex flex-col justify-between items-center relative min-h-[320px] md:col-span-2 overflow-hidden shadow-2xl border-4 border-slate-800">
+                        <div class="w-full flex justify-between items-center text-xs text-slate-400 font-mono">
+                            <span>DIGITAL BLOOD PRESSURE MONITOR</span>
+                            <span id="tensi-pulse-icon" class="text-rose-500 animate-ping"><i class="fas fa-heart"></i></span>
+                        </div>
+
+                        <!-- Monitor Display values -->
+                        <div class="my-6 flex justify-around items-center w-full">
+                            <div>
+                                <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">SYS (Sistolik)</div>
+                                <div class="text-5xl font-black text-emerald-400 font-mono"><span id="tensi-sys">120</span></div>
+                                <div class="text-[10px] text-slate-500 mt-1">mmHg</div>
+                            </div>
+                            <div class="text-4xl text-slate-700 font-light">/</div>
+                            <div>
+                                <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">DIA (Diastolik)</div>
+                                <div class="text-5xl font-black text-teal-300 font-mono"><span id="tensi-dia">80</span></div>
+                                <div class="text-[10px] text-slate-500 mt-1">mmHg</div>
+                            </div>
+                        </div>
+
+                        <!-- Diagnosis Status Badge -->
+                        <div id="tensi-diagnosis-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-6 py-2 rounded-2xl text-xs font-bold tracking-wide">
+                            Kategori: Tekanan Darah Normal Ideal
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME PAGE -->
+        <section id="game" class="page-content max-w-4xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 md:p-8">
+                <div class="text-center mb-6">
+                    <span class="bg-amber-100 text-amber-800 font-extrabold text-xs px-3 py-1 rounded-full uppercase">Game Edukasi Keteknisan</span>
+                    <h2 class="text-3xl font-black text-slate-900 mt-2">Misi Teknisi Super: Repair Bridge & Rescue</h2>
+                    <p class="text-slate-600 text-sm mt-1">Pilih konfigurasi Luas Piston Hidrolik ($A_2$) yang tepat untuk mengangkat jembatan yang macet!</p>
+                </div>
+
+                <!-- Game Container -->
+                <div class="bg-slate-900 rounded-2xl overflow-hidden relative border-4 border-slate-800 shadow-2xl" style="height: 380px;">
+                    <!-- Sky Background -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-sky-900 via-slate-900 to-slate-950"></div>
+
+                    <!-- Bridge Visual -->
+                    <div id="game-bridge" class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-8 bg-amber-700 border-2 border-amber-500 rounded-lg transition-all duration-700 shadow-2xl flex items-center justify-center text-white text-xs font-bold font-mono">
+                        JEMBATAN ANGKAT TEKNOLOGI (Massa Beban: <span id="game-bridge-mass">20,000</span> kg)
+                    </div>
+
+                    <!-- Hydraulic Jack Under Bridge -->
+                    <div id="game-piston-stem" class="absolute bottom-10 left-1/2 -translate-x-1/2 w-12 bg-slate-400 border-2 border-slate-200 transition-all duration-700" style="height: 60px;"></div>
+
+                    <!-- HUD Status -->
+                    <div class="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md p-3 rounded-xl border border-slate-700 text-white font-mono text-xs space-y-1">
+                        <div>Gaya Tangan Maksimum ($F_1$): <span class="text-amber-400 font-bold">500 N</span></div>
+                        <div>Luas Piston Kecil ($A_1$): <span class="text-teal-400 font-bold">10 cm²</span></div>
+                        <div>Gaya Angkat Diperlukan ($F_{target}$): <span class="text-rose-400 font-bold">196,000 N</span></div>
+                    </div>
+
+                    <!-- Game Win Modal Overlay -->
+                    <div id="game-win-modal" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 hidden z-30">
+                        <i class="fas fa-trophy text-5xl text-amber-400 mb-3 animate-bounce"></i>
+                        <h3 class="text-2xl font-black text-white mb-2">MISI TEKNISI BERHASIL!</h3>
+                        <p class="text-teal-200 text-sm max-w-md mb-6">Kamu memilih rasio piston yang pas sehingga gaya tekan 500 N teramplifikasi menjadi 200.000 N dan mengangkat jembatan!</p>
+                        <button onclick="resetTechGame()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg">
+                            Mainkan Misi Lagi <i class="fas fa-redo ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Controls -->
+                <div class="mt-6 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div class="w-full md:w-2/3">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Pilih Ukuran Luas Piston Besar ($A_2$):</label>
+                        <input type="range" id="game-a2-slider" min="100" max="6000" step="100" value="1000" oninput="updateGameUI()" class="w-full h-3 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-teal-600">
+                        <div class="flex justify-between text-[11px] text-slate-500 font-bold mt-1">
+                            <span>Kecil (A₂ = 100 cm²)</span>
+                            <span class="text-teal-600 font-mono text-sm">A₂ terpilih: <span id="game-a2-val">1000</span> cm²</span>
+                            <span>Sangat Besar (A₂ = 6000 cm²)</span>
+                        </div>
+                    </div>
+                    <button onclick="checkGameExecution()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-8 rounded-xl transition shadow-md whitespace-nowrap">
+                        <i class="fas fa-play mr-2"></i> Eksekusi Dongkrak
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ PAGE -->
+        <section id="quiz" class="page-content max-w-4xl mx-auto px-4 py-8">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 md:p-10">
+                
+                <!-- Quiz Intro Screen -->
+                <div id="quiz-intro" class="text-center py-6">
+                    <div class="w-20 h-20 bg-teal-100 text-teal-600 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-900 mb-2">Kuis Evaluasi Teknologi Tekanan (20 Soal)</h2>
+                    <p class="text-slate-600 text-sm max-w-lg mx-auto mb-8">
+                        Uji wawasanmu tentang Dongkrak Hidrolik, Rem Piringan, Tensimeter, Kapal Laut, Efek Bernoulli, serta Integrasi Al-Qur'an!
+                    </p>
+                    <button onclick="startQuiz()" class="bg-primary hover:bg-dark text-white font-extrabold text-lg py-4 px-10 rounded-2xl shadow-xl shadow-teal-500/30 transition transform hover:-translate-y-1">
+                        Mulai Kerjakan Kuis <i class="fas fa-play ml-2"></i>
+                    </button>
+                </div>
+
+                <!-- Quiz Question Screen -->
+                <div id="quiz-container" class="hidden">
+                    <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+                        <span class="font-bold text-slate-500 text-sm">Soal Ke- <span id="q-current" class="text-teal-600 font-mono text-base">1</span> dari 20</span>
+                        <span class="bg-teal-100 text-teal-800 font-bold px-3 py-1 rounded-full text-xs">Skor Sementara: <span id="q-score" class="font-mono">0</span></span>
+                    </div>
+
+                    <div id="question-text" class="text-lg md:text-xl font-bold text-slate-800 mb-6 leading-relaxed">
+                        Pertanyaan akan muncul di sini...
+                    </div>
+
+                    <div id="options-container" class="space-y-3">
+                        <!-- Dynamic Options -->
+                    </div>
+
+                    <div id="feedback-container" class="hidden mt-6 p-4 rounded-xl font-bold text-sm text-center"></div>
+
+                    <div class="mt-8 flex justify-end">
+                        <button id="btn-next-q" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-8 rounded-xl transition">
+                            Soal Berikutnya <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Results Screen -->
+                <div id="quiz-result" class="hidden text-center py-8">
+                    <div id="result-icon" class="text-6xl mb-4 text-amber-400"></div>
+                    <h3 class="text-3xl font-black text-slate-900 mb-2">Kuis Selesai!</h3>
+                    <p class="text-slate-500 text-sm mb-4">Nilai Akhir Kamu:</p>
+                    <div class="text-6xl font-black text-primary font-mono mb-6"><span id="final-score">100</span><span class="text-2xl text-slate-400">/100</span></div>
+                    <p id="result-message" class="text-slate-700 font-medium text-base max-w-md mx-auto mb-8 leading-relaxed"></p>
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="resetQuiz()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 px-6 rounded-xl transition">
+                            <i class="fas fa-redo mr-2"></i> Ulangi Kuis
+                        </button>
+                        <button onclick="navigate('materi')" class="bg-primary hover:bg-dark text-white font-bold py-3 px-6 rounded-xl transition">
+                            <i class="fas fa-book-open mr-2"></i> Pelajari Materi
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-slate-400">Media Ajar Interaktif IPA Kelas 8 MTs / SMP © 2026</p>
+            <p class="text-base font-bold text-teal-400 mt-1">Disusun oleh: Alpan Ibrahim S.Si. | MTsN 1 Kota Malang</p>
+            <p class="text-xs text-slate-500 mt-2">Materi Aplikasi Teknologi Penerapan Tekanan, Hidrolik, Biomekanika, & Integrasi Islami</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation Control
+        function navigate(pageId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.dataset.target === pageId) {
+                    btn.classList.add('bg-teal-700');
+                } else {
+                    btn.classList.remove('bg-teal-700');
+                }
+            });
+
+            if(pageId === 'lab') {
+                updateLabHydraulic();
+            }
+            window.scrollTo(0,0);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-nav').classList.toggle('hidden');
+        }
+
+        // Material Multi-page Control
+        let currentMateriPage = 1;
+        const totalMateriPages = 4;
+
+        function showMateriPage(page) {
+            currentMateriPage = page;
+            for(let i=1; i<=totalMateriPages; i++) {
+                document.getElementById(`mat-page-${i}`).classList.add('hidden');
+                let tab = document.getElementById(`tab-mat-${i}`);
+                tab.classList.remove('text-primary', 'border-b-2', 'border-primary', 'font-bold');
+                tab.classList.add('text-slate-500');
+            }
+
+            document.getElementById(`mat-page-${page}`).classList.remove('hidden');
+            let activeTab = document.getElementById(`tab-mat-${page}`);
+            activeTab.classList.add('text-primary', 'border-b-2', 'border-primary', 'font-bold');
+            activeTab.classList.remove('text-slate-500');
+
+            document.getElementById('btn-prev-mat').classList.toggle('hidden', page === 1);
+            
+            let btnNext = document.getElementById('btn-next-mat');
+            if(page === totalMateriPages) {
+                btnNext.innerHTML = 'Uji Coba Virtual Lab <i class="fas fa-flask ml-2"></i>';
+                btnNext.onclick = () => navigate('lab');
+            } else {
+                btnNext.innerHTML = 'Selanjutnya <i class="fas fa-chevron-right ml-2"></i>';
+                btnNext.onclick = () => changeMateri(1);
+            }
+        }
+
+        function changeMateri(dir) {
+            let newPage = currentMateriPage + dir;
+            if(newPage >= 1 && newPage <= totalMateriPages) {
+                showMateriPage(newPage);
+            }
+        }
+
+        // Virtual Lab Logic & Canvas
+        function switchLabMode(mode) {
+            if(mode === 'hydraulic') {
+                document.getElementById('sim-hydraulic-container').classList.remove('hidden');
+                document.getElementById('sim-tensimeter-container').classList.add('hidden');
+                document.getElementById('lab-tab-1').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-teal-700 shadow-sm transition";
+                document.getElementById('lab-tab-2').className = "px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:text-slate-900 transition";
+                updateLabHydraulic();
+            } else {
+                document.getElementById('sim-hydraulic-container').classList.add('hidden');
+                document.getElementById('sim-tensimeter-container').classList.remove('hidden');
+                document.getElementById('lab-tab-2').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-teal-700 shadow-sm transition";
+                document.getElementById('lab-tab-1').className = "px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:text-slate-900 transition";
+            }
+        }
+
+        let canvas, ctx;
+
+        function updateLabHydraulic() {
+            let f1 = parseFloat(document.getElementById('slider-f1').value);
+            let a1 = parseFloat(document.getElementById('slider-a1').value);
+            let a2 = parseFloat(document.getElementById('slider-a2').value);
+
+            // F2 = F1 * (A2 / A1)
+            let f2 = f1 * (a2 / a1);
+            let km = a2 / a1;
+            let massKg = f2 / 9.8;
+
+            document.getElementById('val-f1').innerText = f1;
+            document.getElementById('val-a1').innerText = a1;
+            document.getElementById('val-a2').innerText = a2;
+
+            document.getElementById('res-f2').innerText = Math.round(f2).toLocaleString();
+            document.getElementById('res-km').innerText = km.toFixed(1);
+            document.getElementById('res-mass').innerText = Math.round(massKg).toLocaleString();
+
+            drawHydraulicCanvas(a1, a2);
+        }
+
+        function drawHydraulicCanvas(a1, a2) {
+            canvas = document.getElementById('hydraulicCanvas');
+            if(!canvas) return;
+            ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Container dimensions
+            let w1 = 30 + (a1 / 20) * 40;
+            let w2 = 80 + (a2 / 500) * 120;
+
+            // Fluid
+            ctx.fillStyle = "#0ea5e9";
+            ctx.fillRect(40, 140, w1, 80);
+            ctx.fillRect(40, 180, 420 - 40, 40);
+            ctx.fillRect(400 - w2/2, 100, w2, 120);
+
+            // Cylinder Walls
+            ctx.strokeStyle = "#475569";
+            ctx.lineWidth = 4;
+            // Cyl 1
+            ctx.strokeRect(40, 60, w1, 160);
+            // Cyl 2
+            ctx.strokeRect(400 - w2/2, 40, w2, 180);
+
+            // Piston 1 (Small)
+            ctx.fillStyle = "#f59e0b";
+            ctx.fillRect(42, 120, w1 - 4, 20);
+            ctx.fillStyle = "#94a3b8";
+            ctx.fillRect(40 + w1/2 - 4, 30, 8, 90);
+
+            // Piston 2 (Large)
+            ctx.fillStyle = "#f59e0b";
+            ctx.fillRect(400 - w2/2 + 2, 90, w2 - 4, 20);
+            ctx.fillStyle = "#94a3b8";
+            ctx.fillRect(400 - 4, 20, 8, 70);
+
+            // Car / Load on Piston 2
+            ctx.fillStyle = "#ef4444";
+            ctx.fillRect(400 - 40, 0, 80, 20);
+            ctx.fillStyle = "#1e293b";
+            ctx.beginPath();
+            ctx.arc(400 - 25, 20, 6, 0, Math.PI*2);
+            ctx.arc(400 + 25, 20, 6, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        function setTensimeterState(state) {
+            let sys = 120, dia = 80;
+            let badgeText = "Kategori: Tekanan Darah Normal Ideal";
+            let badgeClass = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-6 py-2 rounded-2xl text-xs font-bold tracking-wide";
+
+            if(state === 'walk') {
+                sys = 135; dia = 85;
+                badgeText = "Kategori: Aktivitas Ringan (Pra-Hipertensi Sementara)";
+                badgeClass = "bg-amber-500/20 text-amber-300 border border-amber-500/40 px-6 py-2 rounded-2xl text-xs font-bold tracking-wide";
+            } else if(state === 'run') {
+                sys = 160; dia = 95;
+                badgeText = "Kategori: Pompa Jantung Tinggi (Aktivitas Fisik Olahraga)";
+                badgeClass = "bg-rose-500/20 text-rose-300 border border-rose-500/40 px-6 py-2 rounded-2xl text-xs font-bold tracking-wide";
+            }
+
+            document.getElementById('tensi-sys').innerText = sys;
+            document.getElementById('tensi-dia').innerText = dia;
+            
+            let badge = document.getElementById('tensi-diagnosis-badge');
+            badge.innerText = badgeText;
+            badge.className = badgeClass;
+        }
+
+        // Tech Game Logic
+        function updateGameUI() {
+            let a2 = parseFloat(document.getElementById('game-a2-slider').value);
+            document.getElementById('game-a2-val').innerText = a2;
+        }
+
+        function checkGameExecution() {
+            let a2 = parseFloat(document.getElementById('game-a2-slider').value);
+            let f1 = 500;
+            let a1 = 10;
+            let f2 = f1 * (a2 / a1);
+
+            let bridge = document.getElementById('game-bridge');
+            let stem = document.getElementById('game-piston-stem');
+
+            if(f2 >= 196000) {
+                // Lift bridge
+                bridge.style.transform = "translateY(-120px)";
+                stem.style.height = "160px";
+                setTimeout(() => {
+                    document.getElementById('game-win-modal').classList.remove('hidden');
+                }, 800);
+            } else {
+                alert(`Gaya angkat yang dihasilkan baru ${f2.toLocaleString()} N! Masih kurang untuk mengangkat beban 196.000 N. Geser slider A2 ke ukuran lebih besar!`);
+            }
+        }
+
+        function resetTechGame() {
+            document.getElementById('game-win-modal').classList.add('hidden');
+            let bridge = document.getElementById('game-bridge');
+            let stem = document.getElementById('game-piston-stem');
+            bridge.style.transform = "translateY(0px)";
+            stem.style.height = "60px";
+            document.getElementById('game-a2-slider').value = 1000;
+            updateGameUI();
+        }
+
+        // Quiz Data (20 Questions)
+        const quizData = [
+            {q: "Prinsip utama yang dimanfaatkan pada alat dongkrak hidrolik adalah...", options: ["Hukum Archimedes", "Hukum Pascal", "Hukum Boyle", "Prinsip Gaya Gesek"], a: 1},
+            {q: "Bunyi Hukum Pascal menyatakan bahwa tekanan yang diberikan pada zat cair dalam ruang tertutup akan...", options: ["Diteruskan ke segala arah dengan sama besar", "Berkurang seiring bertambahnya kedalaman", "Diserap total oleh dinding wadah", "Menjadi nol di bagian bawah"], a: 0},
+            {q: "Mengapa ujung paku dan jarum suntik dibuat sangat runcing?", options: ["Agar gaya tekan menjadi nol", "Memperbesar luas alas permukaan", "Memperkecil luas alas agar menghasilkan tekanan raksasa", "Agar massa jarum bertambah"], a: 2},
+            {q: "Seseorang yang memakai sepatu salju berlapak lebar tidak akan mudah tenggelam karena...", options: ["Luas alas besar memperkecil tekanan ke salju", "Gaya gravitasi hilang", "Massa orang menjadi lebih ringan", "Salju membeku seketika"], a: 0},
+            {q: "Teknologi medis pengukur tekanan darah dinamakan...", options: ["Higrometer", "Sphygmomanometer (Tensimeter)", "Barometer", "Anemometer"], a: 1},
+            {q: "Tekanan darah sistolik $120 \\text{ mmHg}$ menunjukkan...", options: ["Tekanan saat jantung berelaksasi", "Tekanan puncak saat jantung berkontraksi memompa darah", "Tekanan udara di luar tubuh", "Massa jenis darah"], a: 1},
+            {q: "Mekanisme pengangkatan kapal selam dari dasar laut dilakukan dengan cara...", options: ["Mengisi penuh tangki ballast dengan air", "Meniupkan udara bertekanan tinggi untuk mengeluarkan air dari tangki ballast", "Mematikan mesin kapal", "Memperkecil ukuran kapal"], a: 1},
+            {q: "(Hitungan) Dongkrak hidrolik memiliki $A_1 = 10\\text{ cm}^2$ dan $A_2 = 250\\text{ cm}^2$. Jika diberi gaya $F_1 = 100\\text{ N}$, maka gaya angkat $F_2$ adalah...", options: ["2.500 N", "1.000 N", "500 N", "25.000 N"], a: 0},
+            {q: "Prinsip kerja rem piringan hidrolik pada kendaraan bermotor merupakan penerapan dari...", options: ["Hukum Boyle", "Hukum Pascal", "Prinsip Pemuaian Gas", "Gaya Magnet"], a: 1},
+            {q: "Prinsip Bernoulli menjelaskan bahwa pada fluida yang mengalir bergerak cepat...", options: ["Tekanannya menjadi lebih kecil", "Tekanannya menjadi lebih besar", "Suhunya melonjak drastis", "Massa jenisnya berlipat ganda"], a: 0},
+            {q: "Penyemprot parfum dan karburator mesin mobil memanfaatkan fenomena...", options: ["Efek Venturi (Hukum Bernoulli)", "Dongkrak Archimedes", "Suhu Kalor", "Gaya Grafitasi"], a: 0},
+            {q: "Mengapa galangan kapal laut dari besi yang sangat berat dapat terapung melayang di atas air?", options: ["Besi diubah menjadi udara", "Volume kapal dibuat sangat besar sehingga gaya apung Archimedes melebihi berat kapal", "Air laut tidak memiliki massa jenis", "Tekanan udara menahan kapal"], a: 1},
+            {q: "Teknologi penyedot karet (suction cup) nempel kuat pada dinding kaca karena...", options: ["Tekanan udara luar lebih tinggi daripada tekanan hampa udara di dalam karet", "Terdapat lem tersembunyi", "Kaca menarik karet dengan gaya magnet", "Suhu kaca sangat dingin"], a: 0},
+            {q: "Dalam QS. An-Nahl ayat 14, Allah menyampaikan isyarat kauniyah tentang ditundukkannya lautan untuk...", options: ["Pelayaran kapal-kapal (mowakhira) membelah laut mencari rezeki", "Tempat pembuangan limbah", "Menutupi daratan", "Membuat angin badai"], a: 0},
+            {q: "Perbedaan tekanan udara di atmosfer yang dijelaskan dalam QS. Ar-Rum: 46 bermanfaat menggerakkan...", options: ["Hujan es", "Angin pembawa berita gembira & pendorong layar kapal", "Gempa bumi", "Awan gelap"], a: 1},
+            {q: "Hikmah diciptakannya pembuluh darah arteri yang elastis dalam tubuh manusia adalah...", options: ["Mencegah lonjakan tekanan darah berlebih akibat pompa jantung", "Agar darah tidak mengalir", "Membuat warna kulit merah", "Menyimpan udara"], a: 0},
+            {q: "Alat hidrolik industri multi-piston memiliki keuntungan mekanis ($KM$) sebesar...", options: ["KM = A1 / A2", "KM = A2 / A1", "KM = F1 × F2", "KM = P1 + P2"], a: 1},
+            {q: "Sensor tekanan modern piezoelektrik mengubah tekanan mekanis mikro menjadi...", options: ["Sinyal tegangan listrik (mV)", "Gelombang bunyi keras", "Cahaya infra merah", "Energi panas"], a: 0},
+            {q: "Mengapa pisau dapur yang tumpul harus diasah terlebih dahulu agar mudah memotong daging?", options: ["Untuk memperkecil luas permukaan pisau sehingga tekanan potong meningkat", "Agar masa pisau bertambah", "Agar suhu pisau naik", "Agar pisau menjadi lebih panjang"], a: 0},
+            {q: "Wujud rasa syukur seorang Muslim atas pemahaman ilmu teknologi tekanan adalah...", options: ["Memanfaatkannya untuk merusak alam", "Menggunakannya untuk merancang inovasi bermanfaat dan membantu sesama", "Menyimpan ilmu untuk diri sendiri", "Menolak perkembangan teknologi"], a: 1}
+        ];
+
+        let currentQIndex = 0;
+        let scoreCounter = 0;
+        let isAnswered = false;
+
+        function startQuiz() {
+            currentQIndex = 0;
+            scoreCounter = 0;
+            document.getElementById('q-score').innerText = "0";
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            document.getElementById('btn-next-q').classList.add('hidden');
+            document.getElementById('feedback-container').classList.add('hidden');
+            
+            let qData = quizData[currentQIndex];
+            document.getElementById('q-current').innerText = currentQIndex + 1;
+            document.getElementById('question-text').innerText = `${currentQIndex + 1}. ${qData.q}`;
+            
+            let optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            qData.options.forEach((opt, idx) => {
+                let btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-teal-500 hover:bg-teal-50 transition font-medium text-slate-800 bg-white shadow-sm flex items-center";
+                btn.innerHTML = `<span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 text-teal-700 mr-3 font-bold text-sm shrink-0">${String.fromCharCode(65+idx)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if(isAnswered) return;
+            isAnswered = true;
+
+            let correctIndex = quizData[currentQIndex].a;
+            let buttons = document.getElementById('options-container').querySelectorAll('button');
+            let feedback = document.getElementById('feedback-container');
+
+            if(selectedIndex === correctIndex) {
+                btnElement.classList.replace('border-slate-200', 'border-emerald-500');
+                btnElement.classList.add('bg-emerald-50', 'text-emerald-900');
+                scoreCounter += 5; // 20 * 5 = 100 max
+                document.getElementById('q-score').innerText = scoreCounter;
+                
+                feedback.innerText = "Jawaban Benar! Luar biasa!";
+                feedback.className = "mt-6 p-4 rounded-xl font-bold text-sm text-center bg-emerald-100 text-emerald-800 border border-emerald-300";
+            } else {
+                btnElement.classList.replace('border-slate-200', 'border-rose-500');
+                btnElement.classList.add('bg-rose-50', 'text-rose-900');
+                
+                buttons[correctIndex].classList.replace('border-slate-200', 'border-emerald-500');
+                buttons[correctIndex].classList.add('bg-emerald-50');
+
+                feedback.innerText = "Jawaban Kurang Tepat.";
+                feedback.className = "mt-6 p-4 rounded-xl font-bold text-sm text-center bg-rose-100 text-rose-800 border border-rose-300";
+            }
+            
+            feedback.classList.remove('hidden');
+            document.getElementById('btn-next-q').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if(currentQIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = scoreCounter;
+            
+            let msg = "";
+            let icon = "";
+            if(scoreCounter >= 90) {
+                msg = "Sempurna! Kamu adalah Ahli Rekayasa Teknologi & Sains Tekanan. Pemahaman konsep dan tadabbur Al-Qur'an kamu sangat luar biasa!";
+                icon = '<i class="fas fa-trophy text-amber-400"></i>';
+            } else if (scoreCounter >= 70) {
+                msg = "Hasil yang sangat bagus! Kamu sudah memahami prinsip Hidrolik, Tensimeter, dan Aplikasi Tekanan dengan baik.";
+                icon = '<i class="fas fa-medal text-teal-400"></i>';
+            } else {
+                msg = "Tetap semangat! Pelajari kembali halaman materi dan cobalah eksperimen di Virtual Lab.";
+                icon = '<i class="fas fa-book-reader text-slate-400"></i>';
+            }
+            
+            document.getElementById('result-message').innerText = msg;
+            document.getElementById('result-icon').innerHTML = icon;
+        }
+
+        function resetQuiz() {
+            startQuiz();
+        }
+
+        window.onload = function() {
+            showMateriPage(1);
+            updateLabHydraulic();
+            updateGameUI();
+        };
+    </script>
+</body>
+</html>
